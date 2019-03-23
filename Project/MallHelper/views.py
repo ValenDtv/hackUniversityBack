@@ -16,9 +16,9 @@ def register(request):
     new_user = users(name=request_data['name'], password=request_data['password'], email=request_data['email'])
     new_user.save()
     response = {'success': True, 'userid': new_user.userid}
-    response = json.dumps(response)
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
-	
+
 
 @csrf_exempt
 def authorization(request):
@@ -30,61 +30,78 @@ def authorization(request):
         response["success"] = True
         response["userid"] = user[0].userid
     #user = [u for u in users.objects.raw("Select * from users")]
-    response = json.dumps(response)
-    return HttpResponse(response)
-	
-
-@csrf_exempt
-def create_map(request):
-    request_data = json.loads(request.body)
-    user = users.objects.get(userid=request_data['userid'])
-    new_map = maps(name=request_data['name'], map=request_data['map'], level=request_data['level'],userid=user)
-    new_map.save()
-    response = {'success': True, 'mapid': new_map.mapid}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def update_map(request):
-    request_data = json.loads(request.body)
-    map = maps.objects.get(mapid=request_data['mapid'])
-    for field, value in zip(request_data['fields'], request_data['values']):
-        map.__dict__[field] = value
-        map.save()
-    response = {'success': True}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def delete_map(request):
-    request_data = json.loads(request.body)
-    map = maps.objects.get(mapid=request_data['mapid'])
-    map.delete()
-    response = {'success': True}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def select_maps(request):
-    request_data = json.loads(request.body)
-    user = users.objects.get(userid=request_data['userid'])
-    user_maps = maps.objects.filter(userid=user)
-    response = {'success': True, 'maps': []}
-    for map in user_maps:
-        m = {}
-        m['mapid'] = map.mapid
-        m['level'] = map.level
-        m['map'] = map.map
-        m['name'] = map.name
-        m['userid'] = map.userid.userid
-        response['maps'].append(m)
     response = json.dumps(response, ensure_ascii=False)
-    return HttpResponse(response)	
+    return HttpResponse(response)
 
-	
+
+@csrf_exempt
+def create_rec(request):
+    request_data = json.loads(request.body)
+    place = places.objects.filter(placeid=request_data['placeid'])
+    new_rec = recomendations(message=request_data['message'], placeid=place[0])
+    new_rec.save()
+    if (len(request_data['attributes'])>0):
+        for attribut in request_data['attributes']:
+            atr = attributes.objects.filter(attributeid=attribut)
+            new_ar = recomendationsattributes(recomendationid=new_rec, attributeid=atr[0])
+            new_ar.save()
+    response = {'success': True, 'recomendationid': new_rec.recomendationid}
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def update_rec(request):
+    request_data = json.loads(request.body)
+    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
+    for field, value in zip(request_data['fields'], request_data['values']):
+        recomendation.__dict__[field] = value
+        recomendation.save()
+    response = {'success': True}
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def delete_rec(request):
+    request_data = json.loads(request.body)
+    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
+    recomendation.delete()
+    response = {'success': True}
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def select_rec(request):
+    request_data = json.loads(request.body)
+    recomens = recomendations.objects.filter(placeid=request_data['placeid'])
+    response = {'success': True, 'recomendations': []}
+    for recomen in recomens:
+        r = {'message': recomen.message, 'attributes': []}
+        attrs = recomendationsattributes.objects.filter(recomendationid=recomen)
+        for a in attrs:
+            r['attributes'].append(a.attributeid.attributeid)
+        response['recomendations'].append(r)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def select_allAttrs(request):
+    attrs = attributes.objects.all()
+    response = {'success': True, 'attributes': []}
+    for attr in attrs:
+        a = {}
+        a['attributeid'] = attr.attributeid
+        a['type'] = attr.type
+        a['value'] = attr.value
+        a['in_client'] = attr.in_client
+        response['attributes'].append(a)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
 @csrf_exempt
 def create_place(request):
     request_data = json.loads(request.body)
@@ -92,7 +109,7 @@ def create_place(request):
     new_place = places(x=request_data['x'], y=request_data['y'], name=request_data['name'], mapid=map)
     new_place.save()
     response = {'success': True, 'place':new_place.placeid}
-    response = json.dumps(response)
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
 
@@ -104,7 +121,7 @@ def update_place(request):
         place.__dict__[field] = value
         place.save()
     response = {'success': True}
-    response = json.dumps(response)
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
 
@@ -114,7 +131,7 @@ def delete_place(request):
     place = places.objects.get(placeid=request_data['placeid'])
     place.delete()
     response = {'success': True}
-    response = json.dumps(response)
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
 
@@ -136,94 +153,66 @@ def select_places(request):
     return HttpResponse(response)
 
 
-	@csrf_exempt
-def create_rec(request):
+@csrf_exempt
+def create_map(request):
     request_data = json.loads(request.body)
-    place = places.objects.filter(placeid=request_data['placeid'])
-    new_rec = recomendations(message=request_data['message'], placeid=place[0])
-    new_rec.save()
-    if (len(request_data['attributes'])>0):
-        for attribut in request_data['attributes']:
-            atr = attributes.objects.filter(attributeid=attribut)
-            new_ar = recomendationsattributes(recomendationid=new_rec, attributeid=atr[0])
-            new_ar.save()
-    response = {'success': True, 'recomendationid': new_rec.recomendationid}
-    response = json.dumps(response)
+    user = users.objects.get(userid=request_data['userid'])
+    new_map = maps(name=request_data['name'], map=request_data['map'], level=request_data['level'],userid=user)
+    new_map.save()
+    response = {'success': True, 'mapid': new_map.mapid}
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
 
 @csrf_exempt
-def update_rec(request):
+def update_map(request):
     request_data = json.loads(request.body)
-    recommendation = recomendations.objects.get(recomendationid=request_data['recommendationid'])
+    map = maps.objects.get(mapid=request_data['mapid'])
     for field, value in zip(request_data['fields'], request_data['values']):
-        recommendation.__dict__[field] = value
-        recommendation.save()
+        map.__dict__[field] = value
+        map.save()
     response = {'success': True}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def delete_rec(request):
-    request_data = json.loads(request.body)
-    recommendation = recomendations.objects.get(recomendationid=request_data['recommendationid'])
-    recommendation.delete()
-    response = {'success': True}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def select_rec(request):
-    request_data = json.loads(request.body)
-    recommens = recomendations.objects.filter(placeid=request_data['placeid'])
-    response = {'success': True, 'recommendations': []}
-    for recommen in recommens:
-        r = {'message': recommen.message, 'attributes': []}
-        attrs = recomendationsattributes.objects.filter(recomendationid=recommen)
-        for a in attrs:
-            r['attributes'].append(a.attributeid.attributeid)
-        response['recommendations'].append(r)
     response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
 
 @csrf_exempt
-def select_allAttrs(request):
-    attrs = attributes.objects.all()
-    response = {'success': True, 'attributes': []}
-    for attr in attrs:
-        a = {}
-        a['attributeid'] = attr.attributeid
-        a['type'] = attr.type
-        a['value'] = attr.value
-        response['attributes'].append(a)
+def delete_map(request):
+    request_data = json.loads(request.body)
+    map = maps.objects.get(mapid=request_data['mapid'])
+    map.delete()
+    response = {'success': True}
     response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
-	
 
-	@csrf_exempt
-def addRecommendationAttribute(request):
+
+@csrf_exempt
+def select_maps(request):
+    request_data = json.loads(request.body)
+    user = users.objects.get(userid=request_data['userid'])
+    user_maps = maps.objects.filter(userid=user)
+    response = {'success': True, 'maps': []}
+    for map in user_maps:
+        m = {}
+        m['mapid'] = map.mapid
+        m['level'] = map.level
+        m['map'] = map.map
+        m['name'] = map.name
+        m['userid'] = map.userid.userid
+        response['maps'].append(m)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def addRecomendationAttribute(request):
     request_data = json.loads(request.body)
     recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
     attribute = attributes.objects.get(attributeid=request_data['attributeid'])
     new_rec_attr = recomendationsattributes(recomendationid=recomendation, attributeid=attribute)
     new_rec_attr.save()
     response = {'success': True}
-    response = json.dumps(response)
-    return HttpResponse(response)
-
-
-@csrf_exempt
-def deleteRecommendationAttribute(request):
-    request_data = json.loads(request.body)
-    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
-    attribute = attributes.objects.get(attributeid=request_data['attributeid'])
-    rec_attr = recomendationsattributes.objects.get(recomendationid=recomendation, attributeid=attribute)
-    rec_attr.delete()
-    response = {'success': True}
-    response = json.dumps(response)
+    response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 	
 
