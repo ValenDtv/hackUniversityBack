@@ -9,9 +9,9 @@
 /*==============================================================*/
 create table attributes (
    attributeid          SERIAL               not null,
-   type                 VARCHAR(255)         not null
-      constraint CKC_TYPE_ATTRIBUT check (type in ('age','sex','race')),
+   type                 VARCHAR(255)         not null,
    value                TEXT                 not null,
+   in_client            TEXT                 not null,
    constraint PK_ATTRIBUTES primary key (attributeid)
 );
 

@@ -223,10 +223,12 @@ let selectAllAttributesOutput ={
 			"attributeid": 1, 
 			"type": "sex", 
 			"value": "m"}, 
+			"in_client": "мужчина"
 		{
 			"attributeid": 2, 
 			"type": "race", 
-			"value": "european"
+			"value": "european",
+			"in_client": "европеец"
 		}
 	]
 }
@@ -255,10 +257,74 @@ let deleteRecommendationAttributeOutput = {
 
 
 
-
 //Данные с клерифая
 //send photo data
-//TODO LATER
 let photoData = {
-
+	"level": 1,
+	"lift": false,
+	/*Дальше идут данные клерифая*/
+}
+//output
+let photoDataOutput = {
+  "success": true,
+  "recommendations": [
+    [
+      [
+        {
+          "recomendationid": 11,
+          "message": "Для компании друзей",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "recomendationid": 7,
+          "message": "Для тех, кому есть 18",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        },
+        {
+          "recomendationid": 9,
+          "message": "Люксор огонь кинотеатр",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "recomendationid": 10,
+          "message": "Кинотеатр ваще топчик",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        },
+        {
+          "recomendationid": 8,
+          "message": "Для мужиков",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "recomendationid": 5,
+          "message": "Для взрослых девушек ",
+          "placeid": 2,
+          "placename": "Проверка",
+          "mapid": 1
+        }
+      ]
+    ]
+  ]
 }
