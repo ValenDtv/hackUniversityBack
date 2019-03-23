@@ -363,4 +363,10 @@ def dominate_age(humans):
     result = [int(g) for g in max(age_gaps, key=lambda k: age_gaps[k]).split(',')]
     return sum(result)/len(result)
 	
+	
+def dominate_gender(humans):
+    genders = {'masculine': 0, 'feminine': 0}
+    for human in humans:
+        genders[human['data']['face']['gender_appearance']['concepts'][0]['name']] += 1
+    return max(genders, key=lambda k: genders[k])
 

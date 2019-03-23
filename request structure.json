@@ -150,7 +150,7 @@ let selectPlaces = {
 }
 
 
-//create recommendation
+//create recomendation
 let insertRecomendation = {
     "message":"Люксор огонь кинотеатр",
     "placeid":1,
@@ -163,11 +163,11 @@ let insertRecomendationOutput = {
 }
 
 
-//update recommendation
-let updateRecommendation = {
+//update recomendation
+let updateRecomendation = {
     "fields": [],
     "values": [],
-    "recommendationid": 1
+    "recomendationid": 1
 }
 //output
 let updateRecomendationOutput = {
@@ -175,9 +175,9 @@ let updateRecomendationOutput = {
 }
 
 
-//delete Recommendation
-let deleteRecommedation = {
-    "recommendationid": 1
+//delete Recomendation
+let deleteRecomedation = {
+    "recomendationid": 1
 }
 //output
 let deleteRecomendationOutput = {
@@ -185,21 +185,22 @@ let deleteRecomendationOutput = {
 }
 
 
-//select recommedation (а это нужно вообще?)
-let selectRecommendation = {
-    "recommendationid": 1
+//select recomedation (а это нужно вообще?)
+let selectRecomendation = {
+    "recomendationid": 1
 }
 
 
-//select Recommendations input
-let selectRecommendations = {
+//select Recomendations input
+let selectRecomendations = {
     "placeid": 1
 }
 //output
 let outputRecomendations = {
     "success": true,
-	"recommendations":[
+	"recomendations":[
 	{
+	"recomendationid": 1
     "message":"Люксор огонь кинотеатр",
     "attributes":[1 , 2]
 	}
@@ -209,7 +210,7 @@ let outputRecomendations = {
 
 //select attribute (а это нужно вообще?)
 let selectAttribute = {
-    "recommendationid": 1
+    "recomendationid": 1
 }
 
 
@@ -222,8 +223,9 @@ let selectAllAttributesOutput ={
 		{
 			"attributeid": 1, 
 			"type": "sex", 
-			"value": "m"}, 
+			"value": "m", 
 			"in_client": "мужчина"
+		}
 		{
 			"attributeid": 2, 
 			"type": "race", 
@@ -234,24 +236,24 @@ let selectAllAttributesOutput ={
 }
 
 
-//add Recommendation Attribute
-let addRecommendationAttribute = {
+//add Recomendation Attribute
+let addRecomendationAttribute = {
     "recomendationid": 1,
 	"attributeid": 1
 }
 //output
-let addRecommendationAttributeOutput = {
+let addRecomendationAttributeOutput = {
     "success": true
 }
 
 
-//delete Recommendation Attribute
-let deleteRecommendationAttribute = {
+//delete Recomendation Attribute
+let deleteRecomendationAttribute = {
     "recomendationid": 1,
 	"attributeid": 1
 }
 //output
-let deleteRecommendationAttributeOutput = {
+let deleteRecomendationAttributeOutput = {
     "success": true
 }
 
@@ -267,7 +269,7 @@ let photoData = {
 //output
 let photoDataOutput = {
   "success": true,
-  "recommendations": [
+  "recomendations": [
     [
       [
         {
