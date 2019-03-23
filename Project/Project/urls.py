@@ -30,5 +30,10 @@ urlpatterns = [
     path('deletePlace/', views.delete_place),
     path('selectPlaces/', views.select_places),
     path('insertRecomendation/', views.create_rec),
-    path('updateRecommendation/', views.update_rec)
+    path('updateRecommendation/', views.update_rec),
+	path('deleteRecommendation/', views.delete_rec),
+	path('selectRecommendations/', views.select_rec),
+    path('selectAllAttributes/', views.select_allAttrs),
+    path('addRecommendationAttribute/', views.addRecommendationAttribute),
+    path('deleteRecommendationAttribute/', views.deleteRecommendationAttribute)	
 ]

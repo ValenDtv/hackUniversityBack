@@ -135,3 +135,93 @@ def select_places(request):
     response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
 
+
+	@csrf_exempt
+def create_rec(request):
+    request_data = json.loads(request.body)
+    place = places.objects.filter(placeid=request_data['placeid'])
+    new_rec = recomendations(message=request_data['message'], placeid=place[0])
+    new_rec.save()
+    if (len(request_data['attributes'])>0):
+        for attribut in request_data['attributes']:
+            atr = attributes.objects.filter(attributeid=attribut)
+            new_ar = recomendationsattributes(recomendationid=new_rec, attributeid=atr[0])
+            new_ar.save()
+    response = {'success': True, 'recomendationid': new_rec.recomendationid}
+    response = json.dumps(response)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def update_rec(request):
+    request_data = json.loads(request.body)
+    recommendation = recomendations.objects.get(recomendationid=request_data['recommendationid'])
+    for field, value in zip(request_data['fields'], request_data['values']):
+        recommendation.__dict__[field] = value
+        recommendation.save()
+    response = {'success': True}
+    response = json.dumps(response)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def delete_rec(request):
+    request_data = json.loads(request.body)
+    recommendation = recomendations.objects.get(recomendationid=request_data['recommendationid'])
+    recommendation.delete()
+    response = {'success': True}
+    response = json.dumps(response)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def select_rec(request):
+    request_data = json.loads(request.body)
+    recommens = recomendations.objects.filter(placeid=request_data['placeid'])
+    response = {'success': True, 'recommendations': []}
+    for recommen in recommens:
+        r = {'message': recommen.message, 'attributes': []}
+        attrs = recomendationsattributes.objects.filter(recomendationid=recommen)
+        for a in attrs:
+            r['attributes'].append(a.attributeid.attributeid)
+        response['recommendations'].append(r)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def select_allAttrs(request):
+    attrs = attributes.objects.all()
+    response = {'success': True, 'attributes': []}
+    for attr in attrs:
+        a = {}
+        a['attributeid'] = attr.attributeid
+        a['type'] = attr.type
+        a['value'] = attr.value
+        response['attributes'].append(a)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+	
+
+	@csrf_exempt
+def addRecommendationAttribute(request):
+    request_data = json.loads(request.body)
+    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
+    attribute = attributes.objects.get(attributeid=request_data['attributeid'])
+    new_rec_attr = recomendationsattributes(recomendationid=recomendation, attributeid=attribute)
+    new_rec_attr.save()
+    response = {'success': True}
+    response = json.dumps(response)
+    return HttpResponse(response)
+
+
+@csrf_exempt
+def deleteRecommendationAttribute(request):
+    request_data = json.loads(request.body)
+    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
+    attribute = attributes.objects.get(attributeid=request_data['attributeid'])
+    rec_attr = recomendationsattributes.objects.get(recomendationid=recomendation, attributeid=attribute)
+    rec_attr.delete()
+    response = {'success': True}
+    response = json.dumps(response)
+    return HttpResponse(response)
