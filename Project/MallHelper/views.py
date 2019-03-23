@@ -273,6 +273,7 @@ def party_analys(humans_f):
                                                 recomendationsattributes__attributeid__value="party")
     return recomends_f
 
+	
 def lovers_analys(humans_f, level):
     recomends_f = recomendations.objects.filter(recomendationid=0)
     if (len(humans_f) != 2):
@@ -288,4 +289,16 @@ def lovers_analys(humans_f, level):
     recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
                                                 recomendationsattributes__attributeid__value="lovers",
                                                 placeid__mapid__level=level)
+    return recomends_f
+
+
+def family_analys(humans_f, level):
+    recomends_f = recomendations.objects.filter(recomendationid=0)
+    for human in humans_f:
+        age = int(human['data']['face']['age_appearance']['concepts'][0]['name'])
+        for another in humans_f:
+            if (abs(age - int(another['data']['face']['age_appearance']['concepts'][0]['name']))>10):
+                recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
+                                                            recomendationsattributes__attributeid__value="family",
+                                                            placeid__mapid__level=level)
     return recomends_f
