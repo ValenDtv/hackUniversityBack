@@ -249,3 +249,19 @@ def age_analys(human_age):
         recomends1 = recomends1.union(r)
     recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
                                           recomendationsattributes__attributeid__value="any")
+										  
+					
+def gender_analys(human_gender):
+    recomends1 = recomendations.objects.filter(recomendationsattributes__attributeid__type="sex",
+                                      recomendationsattributes__attributeid__value=human_gender)
+    recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="sex",
+                                          recomendationsattributes__attributeid__value="any")
+    return recomends1.union(recomends2)
+
+
+def race_analys(human_race):
+    recomends1 = recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
+                                      recomendationsattributes__attributeid__value=human_race)
+    recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
+                                          recomendationsattributes__attributeid__value="any")
+    return recomends1.union(recomends2)
