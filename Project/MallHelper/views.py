@@ -240,37 +240,83 @@ def age_groups(human_age):
     return hits
 
 
-def age_analys(human_age):
+def age_analys(human_age, level):
+    if (str(human_age) == 'any'):
+        return recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
+                                             placeid__mapid__level=level)
     hits = age_groups(human_age)
     recomends1 = recomendations.objects.filter(recomendationid=0)
     for h in hits:
         r = recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
-                                          recomendationsattributes__attributeid__value=h)
+                                          recomendationsattributes__attributeid__value=h, placeid__mapid__level=level)
         recomends1 = recomends1.union(r)
     recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
-                                          recomendationsattributes__attributeid__value="any")
-										  
-					
-def gender_analys(human_gender):
+                                          recomendationsattributes__attributeid__value="any",
+                                               placeid__mapid__level=level)
+    return recomends1.union(recomends2)
+
+
+def gender_analys(human_gender, level):
+    if (human_gender == 'any'):
+        return recomendations.objects.filter(recomendationsattributes__attributeid__type="sex",
+                                             placeid__mapid__level=level)
     recomends1 = recomendations.objects.filter(recomendationsattributes__attributeid__type="sex",
-                                      recomendationsattributes__attributeid__value=human_gender)
+                                      recomendationsattributes__attributeid__value=human_gender,
+                                               placeid__mapid__level=level)
     recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="sex",
-                                          recomendationsattributes__attributeid__value="any")
+                                          recomendationsattributes__attributeid__value="any",
+                                               placeid__mapid__level=level)
     return recomends1.union(recomends2)
 
 
-def race_analys(human_race):
+def race_analys(human_race, level):
+    if (human_race == 'any'):
+        return recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
+                                             placeid__mapid__level=level)
     recomends1 = recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
-                                      recomendationsattributes__attributeid__value=human_race)
+                                      recomendationsattributes__attributeid__value=human_race,
+                                               placeid__mapid__level=level)
     recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
-                                          recomendationsattributes__attributeid__value="any")
+                                          recomendationsattributes__attributeid__value="any",
+                                               placeid__mapid__level=level)
     return recomends1.union(recomends2)
-	
-	
-def party_analys(humans_f):
+
+
+def party_analys(humans_f, level):
     recomends_f = recomendations.objects.filter(recomendationid=0)
     recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
-                                                recomendationsattributes__attributeid__value="party")
+                                                recomendationsattributes__attributeid__value="party",
+                                                placeid__mapid__level=level)
+    return recomends_f
+
+
+def lovers_analys(humans_f, level):
+    recomends_f = recomendations.objects.filter(recomendationid=0)
+    if (len(humans_f) != 2):
+        return recomends_f
+    human1_gender = humans_f[0]['data']['face']['gender_appearance']['concepts'][0]['name']
+    human2_gender = humans_f[1]['data']['face']['gender_appearance']['concepts'][0]['name']
+    if (human1_gender == human2_gender):
+        return recomends_f
+    human1_age = int(humans_f[0]['data']['face']['age_appearance']['concepts'][0]['name'])
+    human2_age = int(humans_f[1]['data']['face']['age_appearance']['concepts'][0]['name'])
+    if (abs(human1_age - human2_age)>10):
+        return recomends_f
+    recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
+                                                recomendationsattributes__attributeid__value="lovers",
+                                                placeid__mapid__level=level)
+    return recomends_f
+
+
+def family_analys(humans_f, level):
+    recomends_f = recomendations.objects.filter(recomendationid=0)
+    for human in humans_f:
+        age = int(human['data']['face']['age_appearance']['concepts'][0]['name'])
+        for another in humans_f:
+            if (abs(age - int(another['data']['face']['age_appearance']['concepts'][0]['name']))>10):
+                recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
+                                                            recomendationsattributes__attributeid__value="family",
+                                                            placeid__mapid__level=level)
     return recomends_f
 
 	
@@ -302,3 +348,17 @@ def family_analys(humans_f, level):
                                                             recomendationsattributes__attributeid__value="family",
                                                             placeid__mapid__level=level)
     return recomends_f
+
+
+def dominate_age(humans):
+    age_attrs = attributes.objects.filter(type="age").exclude(value="any")
+    age_gaps = {}
+    for age_attr in age_attrs:
+        age_gaps[age_attr.value] = 0
+    for human in humans:
+        age = int(human['data']['face']['age_appearance']['concepts'][0]['name'])
+        human_age_gaps = age_groups(age)
+        for gap in human_age_gaps:
+            age_gaps[gap] += 1
+    result = [int(g) for g in max(age_gaps, key=lambda k: age_gaps[k]).split(',')]
+    return sum(result)/len(result)
