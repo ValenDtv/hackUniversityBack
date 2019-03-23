@@ -21,6 +21,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('register/', views.register),
 	path('authInput/', views.authorization),
+	path('insertMapInput/', views.create_map),
+    path('mapUpdate/', views.update_map),
+    path('mapDelete/', views.delete_map),
+    path('selectMaps/', views.select_maps),
+	path('createPlace/', views.create_place),
+    path('updatePlace/', views.update_place),
+    path('deletePlace/', views.delete_place),
+    path('selectPlaces/', views.select_places),
     path('insertRecomendation/', views.create_rec),
     path('updateRecommendation/', views.update_rec)
 ]
