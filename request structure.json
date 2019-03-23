@@ -1,0 +1,151 @@
+//register
+//input
+let register = {
+    "name": "username",
+    "password": "password",
+    "email": "email"
+}
+
+//output 
+let registerOutput = {
+    "success": true,
+    "userid":1
+}
+//auth
+//input
+let authInput = {
+    "email": "email",
+    "password": "password"
+}
+
+//output 
+let authOutput = {
+    "success": true,
+    "userid": 1
+}
+//create map FORM DATA
+let InsertMapInput = {
+    "file": "image",
+    "fields":{
+        "level": 1,
+        "name": "Лето"
+    }
+}
+//output 
+let insertMapOutput = {
+    "map":"path/to/newImage.jpg",
+    "level":1,
+    "mapid":1,
+    "mapname":"Лето"
+}
+
+//update map
+//update file
+let mapUpdateImage ={
+    "file": "image"
+}
+
+let mapUpdateImageOutput = {
+    "map":"path/to/newImage.jpg",
+    "level":2,
+    "mapid":1,
+    "mapname":"Галера"
+}
+
+let mapUpdateInfo = {
+    "fields": ["level", "mapname"],
+    "values": [2, "Галера"],
+    "mapid": 1
+}
+
+let mapUpdateInfoOutput = {
+    "map":"path/to/image.jpg",
+    "level":2,
+    "mapid":1,
+    "mapname":"Галера"
+}
+//delete map
+let mapDelete = {
+    "mapid": 1
+}
+let mapDeleteOutput = {
+    "success": true
+}
+
+//select map
+let selectMap = {
+    "mapid":1
+}
+
+let selectMapOutput = {
+
+}
+
+let selectMaps = {
+    "userid": 1
+}
+//create place
+let createPlace = {
+    "x":1,
+    "y":1,
+    "name":"Luxor",
+    "mapid":1
+}
+//update place
+let updatePlace = {
+    "fields": [],
+    "values": [],
+    "placeid":1
+}
+//delete place
+let deletePlace = {
+    "placeid": 1
+}
+let deletePlaceOutput = {
+    "success": true
+}
+//select place
+let selectPlace = {
+    "placeid": 1
+}
+let selectPlaces = {
+    "mapid": 1
+}
+
+//create recommendation
+let insertRecomendation = {
+    "message":"Люксор огонь кинотеатр",
+    "placeid":1,
+    "attributes":[1 , 2]
+}
+
+//update recommendation
+let updateRecommendation = {
+    "fields": [],
+    "values": [],
+    "recommendationid": 1
+}
+//deleteRecommendation
+let deleteRecommedation = {
+    "recommedationid": 1
+}
+//select recommedation
+let selectRecommendation = {
+    "recommedationid": 1
+}
+
+let selectRecommendations = {
+    "placeid": 1
+}
+
+//select attribute
+let selectAttribute = {
+    "recommendationid": 1
+}
+
+let selectAllAttributes = {}
+//send photo data
+//TODO LATER
+let photoData = {
+
+}
