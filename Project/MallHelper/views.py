@@ -265,3 +265,10 @@ def race_analys(human_race):
     recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="race",
                                           recomendationsattributes__attributeid__value="any")
     return recomends1.union(recomends2)
+	
+	
+def party_analys(humans_f):
+    recomends_f = recomendations.objects.filter(recomendationid=0)
+    recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
+                                                recomendationsattributes__attributeid__value="party")
+    return recomends_f
