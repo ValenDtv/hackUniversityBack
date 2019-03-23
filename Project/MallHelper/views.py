@@ -362,3 +362,5 @@ def dominate_age(humans):
             age_gaps[gap] += 1
     result = [int(g) for g in max(age_gaps, key=lambda k: age_gaps[k]).split(',')]
     return sum(result)/len(result)
+	
+
