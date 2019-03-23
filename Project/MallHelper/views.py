@@ -272,3 +272,20 @@ def party_analys(humans_f):
     recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
                                                 recomendationsattributes__attributeid__value="party")
     return recomends_f
+
+def lovers_analys(humans_f, level):
+    recomends_f = recomendations.objects.filter(recomendationid=0)
+    if (len(humans_f) != 2):
+        return recomends_f
+    human1_gender = humans_f[0]['data']['face']['gender_appearance']['concepts'][0]['name']
+    human2_gender = humans_f[1]['data']['face']['gender_appearance']['concepts'][0]['name']
+    if (human1_gender == human2_gender):
+        return recomends_f
+    human1_age = int(humans_f[0]['data']['face']['age_appearance']['concepts'][0]['name'])
+    human2_age = int(humans_f[1]['data']['face']['age_appearance']['concepts'][0]['name'])
+    if (abs(human1_age - human2_age)>10):
+        return recomends_f
+    recomends_f = recomendations.objects.filter(recomendationsattributes__attributeid__type="groups",
+                                                recomendationsattributes__attributeid__value="lovers",
+                                                placeid__mapid__level=level)
+    return recomends_f
