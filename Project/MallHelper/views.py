@@ -78,7 +78,7 @@ def select_rec(request):
     recomens = recomendations.objects.filter(placeid=request_data['placeid'])
     response = {'success': True, 'recomendations': []}
     for recomen in recomens:
-        r = {'message': recomen.message, 'attributes': []}
+        r = {'recomendationid': recomen.recomendationid,'message': recomen.message, 'attributes': []}
         attrs = recomendationsattributes.objects.filter(recomendationid=recomen)
         for a in attrs:
             r['attributes'].append(a.attributeid.attributeid)
