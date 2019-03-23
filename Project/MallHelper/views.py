@@ -225,3 +225,27 @@ def deleteRecommendationAttribute(request):
     response = {'success': True}
     response = json.dumps(response)
     return HttpResponse(response)
+	
+
+def age_groups(human_age):
+    age_attrs = attributes.objects.filter(type="age").exclude(value="any")
+    age = {}
+    for age_attr in age_attrs:
+        gap = [int(a) for a in age_attr.value.split(',')]
+        age[age_attr.value] = gap
+    hits = []
+    for key,a in age.items():
+        if (a[0] < human_age < a[1]):
+            hits.append(key)
+    return hits
+
+
+def age_analys(human_age):
+    hits = age_groups(human_age)
+    recomends1 = recomendations.objects.filter(recomendationid=0)
+    for h in hits:
+        r = recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
+                                          recomendationsattributes__attributeid__value=h)
+        recomends1 = recomends1.union(r)
+    recomends2 = recomendations.objects.filter(recomendationsattributes__attributeid__type="age",
+                                          recomendationsattributes__attributeid__value="any")
