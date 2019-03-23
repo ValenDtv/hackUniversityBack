@@ -19,5 +19,8 @@ from MallHelper import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('register/', views.register)
+	path('register/', views.register),
+	path('authInput/', views.authorization),
+    path('insertRecomendation/', views.create_rec),
+    path('updateRecommendation/', views.update_rec)
 ]

@@ -5,85 +5,90 @@ let register = {
     "password": "password",
     "email": "email"
 }
-
 //output 
 let registerOutput = {
     "success": true,
     "userid":1
 }
+
+
 //auth
 //input
 let authInput = {
     "email": "email",
     "password": "password"
 }
-
 //output 
 let authOutput = {
     "success": true,
     "userid": 1
 }
-//create map FORM DATA
-let InsertMapInput = {
-    "file": "image",
-    "fields":{
-        "level": 1,
-        "name": "Лето"
+
+
+//create map
+let insertMapInput = {
+	"userid":1,
+	"map": "jjhjhghjghjglkl;lk;lk;l", 
+	"level": 1,
+	"name": "Лето"
     }
 }
 //output 
 let insertMapOutput = {
-    "map":"path/to/newImage.jpg",
-    "level":1,
-    "mapid":1,
-    "mapname":"Лето"
+    "success": true,
+    "mapid":1
 }
+
 
 //update map
-//update file
-let mapUpdateImage ={
-    "file": "image"
-}
-
-let mapUpdateImageOutput = {
-    "map":"path/to/newImage.jpg",
-    "level":2,
-    "mapid":1,
-    "mapname":"Галера"
-}
-
-let mapUpdateInfo = {
-    "fields": ["level", "mapname"],
+let mapUpdate ={
+    "fields": ["level", "name"],
     "values": [2, "Галера"],
-    "mapid": 1
+    "mapid": 2
+}
+//output 
+let mapUpdateOutput = {
+    "success": true
 }
 
-let mapUpdateInfoOutput = {
-    "map":"path/to/image.jpg",
-    "level":2,
-    "mapid":1,
-    "mapname":"Галера"
-}
+
 //delete map
 let mapDelete = {
     "mapid": 1
 }
+//output
 let mapDeleteOutput = {
     "success": true
 }
 
-//select map
+
+//select map (а это нужно вообще?)
 let selectMap = {
     "mapid":1
 }
-
 let selectMapOutput = {
 
 }
 
+//select maps
 let selectMaps = {
     "userid": 1
 }
+//output
+let selectMapsOutput = {
+	"success": true,
+	"maps": [
+	{
+		 "mapid": 1,
+		 "level": 1,
+		 "map": "path",
+		 "name": "first level",
+		 "userid": 1
+	}
+	]
+}
+
+
 //create place
 let createPlace = {
     "x":1,
@@ -91,26 +96,59 @@ let createPlace = {
     "name":"Luxor",
     "mapid":1
 }
+//output 
+let createPlaceOutput = {
+    "success": true,
+    "placeid":1
+}
+
+
 //update place
 let updatePlace = {
     "fields": [],
     "values": [],
     "placeid":1
 }
+//output 
+let updatePlaceOutput = {
+    "success": true
+}
+
+
 //delete place
 let deletePlace = {
     "placeid": 1
 }
+//output
 let deletePlaceOutput = {
     "success": true
 }
-//select place
+
+
+//select place (а это нужно вообще?)
 let selectPlace = {
     "placeid": 1
 }
+
+
+//select places
 let selectPlaces = {
     "mapid": 1
 }
+//output
+let selectPlaces = {
+	"success": true,
+	"places": [
+		{
+			"placeid": 2,
+			"x": 111.3, 
+			"y": 16.3, 
+			"name": "Проверка", 
+			"mapid": 1
+		}
+		]
+}
+
 
 //create recommendation
 let insertRecomendation = {
@@ -118,6 +156,12 @@ let insertRecomendation = {
     "placeid":1,
     "attributes":[1 , 2]
 }
+//output 
+let insertRecomendationOutput = {
+    "success": true,
+    "recomendationid":1
+}
+
 
 //update recommendation
 let updateRecommendation = {
@@ -125,25 +169,94 @@ let updateRecommendation = {
     "values": [],
     "recommendationid": 1
 }
-//deleteRecommendation
-let deleteRecommedation = {
-    "recommedationid": 1
-}
-//select recommedation
-let selectRecommendation = {
-    "recommedationid": 1
+//output
+let updateRecomendationOutput = {
+    "success": true
 }
 
+
+//delete Recommendation
+let deleteRecommedation = {
+    "recommendationid": 1
+}
+//output
+let deleteRecomendationOutput = {
+    "success": true
+}
+
+
+//select recommedation (а это нужно вообще?)
+let selectRecommendation = {
+    "recommendationid": 1
+}
+
+
+//select Recommendations input
 let selectRecommendations = {
     "placeid": 1
 }
+//output
+let outputRecomendations = {
+    "success": true,
+	"recommendations":[
+	{
+    "message":"Люксор огонь кинотеатр",
+    "attributes":[1 , 2]
+	}
+	]
+}
 
-//select attribute
+
+//select attribute (а это нужно вообще?)
 let selectAttribute = {
     "recommendationid": 1
 }
 
+
+//select all Attributes
 let selectAllAttributes = {}
+//output
+let selectAllAttributesOutput ={
+"success": true, 
+	"attributes": [
+		{
+			"attributeid": 1, 
+			"type": "sex", 
+			"value": "m"}, 
+		{
+			"attributeid": 2, 
+			"type": "race", 
+			"value": "european"
+		}
+	]
+}
+
+
+//add Recommendation Attribute
+let addRecommendationAttribute = {
+    "recomendationid": 1,
+	"attributeid": 1
+}
+//output
+let addRecommendationAttributeOutput = {
+    "success": true
+}
+
+
+//delete Recommendation Attribute
+let deleteRecommendationAttribute = {
+    "recomendationid": 1,
+	"attributeid": 1
+}
+//output
+let deleteRecommendationAttributeOutput = {
+    "success": true
+}
+
+
+
+
+//Данные с клерифая
 //send photo data
 //TODO LATER
 let photoData = {
