@@ -42,7 +42,7 @@ class attributes (models.Model):
     attributeid = models.AutoField(primary_key=True)
     type = models.CharField(max_length=255)
     value = models.TextField()
-	in_client = models.TextField()
+    in_client = models.TextField()
     class Meta:
         db_table = "attributes"
 

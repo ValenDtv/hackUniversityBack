@@ -214,7 +214,19 @@ def addRecomendationAttribute(request):
     response = {'success': True}
     response = json.dumps(response, ensure_ascii=False)
     return HttpResponse(response)
-	
+
+
+@csrf_exempt
+def deleteRecomendationAttribute(request):
+    request_data = json.loads(request.body)
+    recomendation = recomendations.objects.get(recomendationid=request_data['recomendationid'])
+    attribute = attributes.objects.get(attributeid=request_data['attributeid'])
+    rec_attr = recomendationsattributes.objects.get(recomendationid=recomendation, attributeid=attribute)
+    rec_attr.delete()
+    response = {'success': True}
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
+
 
 def age_groups(human_age):
     age_attrs = attributes.objects.filter(type="age").exclude(value="any")
@@ -358,4 +370,49 @@ def dominate_gender(humans):
     for human in humans:
         genders[human['data']['face']['gender_appearance']['concepts'][0]['name']] += 1
     return max(genders, key=lambda k: genders[k])
+	
+
+@csrf_exempt
+def analysisPhotoData(request):
+    request_data = json.loads(request.body)
+    humans = request_data['outputs'][0]['data']['regions']
+    human_gender = humans[0]['data']['face']['gender_appearance']['concepts'][0]['name']
+    human_age = int(humans[0]['data']['face']['age_appearance']['concepts'][0]['name'])
+    human_race = humans[0]['data']['face']['multicultural_appearance']['concepts'][0]['name']
+    recomends_lvls = [[], [], [], []]
+    if (len(humans)>1):
+        if (not request_data['lift']):
+            recomends_party = party_analys(humans, request_data['level'])
+            recomends_lovers = lovers_analys(humans, request_data['level'])
+            recomends_family = family_analys(humans, request_data['level'])
+            recomends_lvls[0] = (recomends_party.union(recomends_lovers.union(recomends_family)))
+        else:
+            recomends_lvls[0] = recomendations.objects.filter(recomendationid=0)
+        human_gender = dominate_gender(humans)
+        human_age = dominate_age(humans)
+        human_race = "any"
+    recomends_sex = gender_analys(human_gender, request_data['level'])
+    recomends_age = age_analys(human_age, request_data['level'])
+    recomends_race = race_analys(human_race, request_data['level'])
+    recomends_lvls[1] = (recomends_sex.intersection(recomends_age.intersection(recomends_race))).\
+        difference(recomends_lvls[0])
+    recomends_lvls[2] = (recomends_sex.intersection(recomends_age).union(recomends_sex.intersection(recomends_race)).
+                         union(recomends_age.intersection(recomends_race))).\
+        difference(recomends_lvls[1].union(recomends_lvls[0]))
+    recomends_lvls[3] = (recomends_sex.union(recomends_age.union(recomends_race)))\
+        .difference(recomends_lvls[2].union(recomends_lvls[1].union(recomends_lvls[0])))
+    response = {'success': True, 'recomendations': [[], [], [], []]}
+    for i, lvl in enumerate(response['recomendations']):
+        recomends_of_lvl = []
+        for recomend in recomends_lvls[i]:
+            r = {}
+            r['recomendationid'] = recomend.recomendationid
+            r['message'] = recomend.message
+            r['placeid'] = recomend.placeid.placeid
+            r['placename'] = places.objects.get(placeid=r['placeid']).name
+            r['mapid'] = maps.objects.get(places__placeid=r['placeid']).mapid
+            recomends_of_lvl.append(r)
+        lvl.append(recomends_of_lvl)
+    response = json.dumps(response, ensure_ascii=False)
+    return HttpResponse(response)
 

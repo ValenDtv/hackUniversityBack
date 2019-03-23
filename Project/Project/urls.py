@@ -35,5 +35,6 @@ urlpatterns = [
 	path('selectRecomendations/', views.select_rec),
     path('selectAllAttributes/', views.select_allAttrs),
     path('addRecomendationAttribute/', views.addRecomendationAttribute),
-    path('deleteRecomendationAttribute/', views.deleteRecomendationAttribute)	
+    path('deleteRecomendationAttribute/', views.deleteRecomendationAttribute),
+	path('photoData/', views.analysisPhotoData)	
 ]
